@@ -1,0 +1,23 @@
+{
+  "name": "dungang/yii2-fex-webuploader",
+  "description": "A  webuploader for Yii2, base on mysqli",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "dun gang",
+      "email": "dungang@126.com",
+      "homepage": "https://github.com/dungang",
+      "role": "Creator"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": "~2.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "dungang\\webuploader\\": "scr"
+    }
+  }
+}
