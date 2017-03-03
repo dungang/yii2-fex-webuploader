@@ -61,42 +61,42 @@ composer require dungang/geetest
     /**
      * @var string 文件上传入口
      */
-    public $uploadPoint;
+    'uploadPoint'=> null,
 
     /**
      * @var string 删除文件入口
      */
-    public $delPoint;
+    'delPoint'=>null,
 
     /**
      * @var bool 是否自动开启上传
      */
-    public $auto = true;
+    'auto' => true,
 
     /**
      * @var bool 分片上传大文件
      */
-    public $chunked = false;
+    'chunked' => false,
 
     /**
      * @var int 上传文件数量限制
      */
-    public $fileNumLimit = 1;
+    'fileNumLimit' => 1,
 
     /**
      * @var int 单个文件大小限制
      */
-    public $fileSingleSizeLimit = 100 * 1024 * 1024;
+    'fileSingleSizeLimit' => 100 * 1024 * 1024,
 
     /**
      * @var int 分片的大小
      */
-    public $chunkSize = 5 * 1024 * 1024;
+    'chunkSize' => 5 * 1024 * 1024,
 
     /**
      * @var array 额外的表单数据
      */
-    public $formData = [];
+    'formData' => [],
 ```
 
 ## 扩展驱动
