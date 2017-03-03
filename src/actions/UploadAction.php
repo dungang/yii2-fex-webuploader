@@ -62,7 +62,7 @@ class UploadAction extends Action
             ];
         }
         if (isset($result['error'])) {
-            \Yii::$app->response->setStatusCode(500,$result['error']['message']);
+            \Yii::$app->response->setStatusCode(500);
         }
         return Json::encode($result);
     }

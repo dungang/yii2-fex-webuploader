@@ -21,6 +21,8 @@
                 }
                 _hidden.val(results.join(','));
             });
+
+
             // 当有文件添加进来的时候
             uploader.on('fileQueued', function( file ) {
                 var _li = $(
@@ -85,20 +87,25 @@
                 _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
             });
 
-            //驱动要求在保持会话的其他的参数回传
+            // 当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
             uploader.on('uploadBeforeSend',function (obj,data) {
+
+                // 除本地驱动，其他驱动可能需要在客户端和服务端来回传递而外的参数
+                // 发送
                 if (extraData[obj.file.id]) {
                     data.extraData = extraData[obj.file.id];
                 }
             });
-            
+            //当某个文件上传到服务端响应后，会派送此事件来询问服务端响应是否有效。
+            //如果此事件handler返回值为false, 则此文件将派送server类型的uploadError事件。
             uploader.on('uploadAccept',function (obj,ret) {
                 if (ret.error) {
                     uploader.cancelFile(obj.file);
-                    alert(ret.error.message);
+                    alert(obj.file.name + ret.error.message);
                     return false;
                 }
-                //驱动要求在保持会话的其他的参数接受
+                //除本地驱动，其他驱动可能需要在客户端和服务端来回传递而外的参数
+                //接受
                 if (ret.extraData) {
                     extraData[obj.file.id] = ret.extraData;
                 }
@@ -135,11 +142,13 @@
                 }
             });
 
+            //不管成功或者失败，文件上传完成时触发。
             // 完成上传完了，成功或者失败，先删除进度条。
             uploader.on('uploadComplete', function( file ) {
                 //_this.find('#'+file.id + '> .progress').remove();
             });
 
+            //当所有文件上传结束时触发。
             uploader.on('uploadFinished',function () {
                 _hidden.trigger('update');
             });
