@@ -97,6 +97,11 @@ composer require dungang/geetest
      * @var array 额外的表单数据
      */
     'formData' => [],
+    
+    /**
+     * @var array 初始化 webuploader options
+     */
+    'clientOptions' => []
 ```
 
 ## 扩展驱动
