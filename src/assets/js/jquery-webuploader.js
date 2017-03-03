@@ -23,7 +23,7 @@
             uploader.on('fileQueued', function( file ) {
                 var _li = $(
                         '<div id="' + file.id + '"  class="list-group-item file-item">' +
-                        '<div class="info h4">' + file.name +
+                        '<div class="info h4">' + file.name + '['+WebUploader.formatSize(file.size)+']'+
                         '<button type="button" class="close" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                         '</button>' +
