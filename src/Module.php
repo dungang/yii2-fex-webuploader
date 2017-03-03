@@ -12,6 +12,10 @@ namespace dungang\webuploader;
 class Module extends \yii\base\Module
 {
     /**
+     * @var array 访问角色 默认是登录用户才可以
+     */
+    public $role = ['@'];
+    /**
      * @inheritdoc
      */
     public $controllerNamespace = 'dungang\webuploader\controllers';

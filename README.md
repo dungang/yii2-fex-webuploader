@@ -31,6 +31,11 @@ composer require dungang/yii2-fex-webuploader
 //下面是默认配置    
 //    [
         /**
+         * @var array 访问角色 默认是登录用户才可以
+         */
+//        role => ['@'],
+         
+        /**
          * @var string 上传文件的驱动
          */
 //        'driver' => 'dungang\webuploader\components\LocalUploader',
@@ -65,9 +70,16 @@ composer require dungang/yii2-fex-webuploader
 
 > 配置参数如下
 
-根据实际情况选择性配置，默认上传入口时本模块的控制器，也可以同个action配置在自己app的其他的控制器
+* 根据实际情况选择性配置，默认上传入口时本模块的控制器，也可以同个action配置在自己app的其他的控制器
+* 安装上面的安装步骤 就可以很好的工作了
+
 
 ```
+    /**
+     * @var string 选择按钮的名称
+     */
+    'pickTitle' => '选择文件',
+    
     /**
      * @var string 文件上传入口
      */

@@ -19,6 +19,11 @@ use yii\web\Request;
 class WebUploader extends InputWidget
 {
     /**
+     * @var string 选择按钮的名称
+     */
+    public $pickTitle = '选择文件';
+
+    /**
      * @var string 文件上传入口
      */
     public $uploadPoint;
@@ -97,7 +102,7 @@ class WebUploader extends InputWidget
         $this->registerPlugin('webuploader');
         $input = $this->renderInput($this->id);
         return Html::tag('div', $input .
-            '<div  class="list-group uploader-list"></div><div id="'.$pick.'">选择图片</div>',
+            '<div  class="list-group uploader-list"></div><div id="'.$pick.'">'+$this->pickTitle+'</div>',
             $this->options);
     }
 

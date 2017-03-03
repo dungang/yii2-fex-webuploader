@@ -8,6 +8,7 @@
 
 namespace dungang\webuploader\controllers;
 
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class FileController extends Controller
@@ -16,6 +17,24 @@ class FileController extends Controller
      * @var \dungang\webuploader\Module
      */
     public $module;
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access'=>[
+                'class'=>AccessControl::className(),
+                'rules'=>[
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->role,
+                    ],
+                ]
+            ],
+        ];
+    }
 
     public function actions()
     {
