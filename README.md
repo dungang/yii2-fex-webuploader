@@ -39,6 +39,10 @@ composer require dungang/yii2-fex-webuploader
          * @var string 上传文件的驱动
          */
 //        'driver' => 'dungang\webuploader\components\LocalUploader',
+//        'driver' => [
+                'class'=>'dungang\webuploader\components\AliYunOSSUploader',
+                'paramKey'=>'oss'
+            ],
     
         /**
          * @var string 上传文件保存的相对路径

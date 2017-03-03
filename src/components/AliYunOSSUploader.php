@@ -15,6 +15,7 @@ use yii\helpers\BaseFileHelper;
 /**
  * @var $result \Aliyun\OSS\Models\InitiateMultipartUploadResult
  * @var $partResult  \Aliyun\OSS\Models\UploadPartResult
+ * @var $class  string| \Aliyun\OSS\OSSClient
  */
 class AliYunOSSUploader extends Uploader
 {
@@ -26,15 +27,37 @@ class AliYunOSSUploader extends Uploader
     const PART_NUMBER = 'PartNumber';
     const PART_SIZE = 'PartSize';
 
+    const ACCESS_KEY_ID = 'AccessKeyId';
+    const ACCESS_KEY_SECRET = 'AccessKeySecret';
+    const ENDPOINT = 'Endpoint';
+
+    public $paramKey = 'oss';
+
+    protected $config;
+
     /**
      * @var \Aliyun\OSS\OSSClient
      */
-    public $client;
+    protected $client;
 
     /**
      * @var string OSS Bucket
      */
     public $bucket;
+
+    public function init()
+    {
+        parent::init();
+
+        $this->config = \Yii::$app->params[$this->paramKey];
+        $class = 'Aliyun\OSS\OSSClient';
+        $this->client = $class::factory([
+            self::ENDPOINT => $this->config['EndPoint'],
+            self::ACCESS_KEY_ID       => $this->config['AccessKeyId'],
+            self::ACCESS_KEY_SECRET   => $this->config['AccessKeySecret'],
+        ]);
+
+    }
 
     /**
      * @return bool|string
