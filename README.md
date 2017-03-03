@@ -52,14 +52,13 @@ composer require dungang/yii2-fex-webuploader
 > 配置widget
 
 ```
-<?= $form->field($model, 'file')->widget('\dungang\webuploader\widgets\WebUploader',[
-    'chunked'=>true,
-    'name' =>'pack'
+<?= $form->field($model, 'image')->widget('\dungang\webuploader\widgets\WebUploader',[
+    'chunked'=>true
 ]) ?>
 
 <?= \dungang\webuploader\widgets\WebUploader::widget([
     'chunked'=>true,
-    'name' =>'pack'
+    'name' =>'image'
 ])?>
 
 ```
