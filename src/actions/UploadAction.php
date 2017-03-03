@@ -52,7 +52,7 @@ class UploadAction extends Action
                     }
                 } else {
                     $result['error'] = [
-                        'code'=> '112',
+                        'code'=> '401',
                         'message' => '不允许上传'.$this->uploader->file->extension.'格式的文件',
                     ];
                 }
@@ -71,6 +71,9 @@ class UploadAction extends Action
                 'code'=> '400',
                 'message' => '请求不合法',
             ];
+        }
+        if (isset($result['error'])) {
+            \Yii::$app->response->setStatusCode(500,$result['error']['message']);
         }
         return Json::encode($result);
     }

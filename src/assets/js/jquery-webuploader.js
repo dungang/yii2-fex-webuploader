@@ -65,8 +65,6 @@
 
             // 文件上传过程中创建进度条实时显示。
             uploader.on('uploadProgress', function( file, percentage ) {
-                console.log('uploadProgress:'+file.id);
-                console.log('uploadProgress:'+percentage);
                 var _li = _this.find( '#'+file.id ),
                     _percent = _li.find('.progress span');
 
@@ -83,6 +81,16 @@
                 var value = percentage * 100 + '%';
                 _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
             });
+            
+            
+            uploader.on('uploadAccept',function (obj,ret) {
+                if (ret.error) {
+                    uploader.cancelFile(obj.file);
+                    alert(ret.error.message);
+                    return false;
+                }
+                return true;
+            });
 
             // 文件上传失败，显示上传出错。
             uploader.on('uploadError', function( file ) {
@@ -94,38 +102,31 @@
                 if ( !_error.length ) {
                     _error = $('<div class="error"></div>').appendTo( _li );
                 }
-
                 _error.text('上传失败');
             });
 
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess',function (file,response) {
-                console.log('uploadSuccess:'+file.id);
                 _this.find( '#'+file.id ).addClass('upload-state-done');
                 if (!response.error) {
                     if (opts.options.chunked) {
                         if (response.chunks - response.chunk == 1) {
                             //_this.find('input[type=hidden]').val(response.result);
                             _files[file.id] = response.result;
-                            console.log('chunk:'+response.result);
                         }
                     } else {
                         //_this.find('input[type=hidden]').val(response.result);
                         _files[file.id] = response.result;
-                        console.log('chunk:'+response.result);
                     }
                 }
             });
 
             // 完成上传完了，成功或者失败，先删除进度条。
             uploader.on('uploadComplete', function( file ) {
-                console.log('uploadComplete:'+file.id);
                 //_this.find('#'+file.id + '> .progress').remove();
             });
 
             uploader.on('uploadFinished',function () {
-                console.log('uploadFinished:'+_files);
-
                 _hidden.trigger('update');
             });
         });
