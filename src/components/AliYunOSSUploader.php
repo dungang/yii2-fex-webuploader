@@ -32,7 +32,7 @@ class AliYunOSSUploader extends Uploader
 
     public $paramKey = 'oss';
 
-    protected $config;
+    public $config;
 
     /**
      * @var \Aliyun\OSS\OSSClient
