@@ -1,5 +1,14 @@
 # yii2 fex-webuploader
 
+* 支持分片上传大文件
+* 可以开启和关闭分片上传
+* 默认只能上传一个文件 文件的服务端存储位置保存在隐藏字段 
+* 要上传多个文件，可以通过 clientOptions配置。开启之后，多个文件的服务端存储位置用`,`分隔成一个字符串保存在隐藏字段
+* 本模块的UI不具备通用性，只是解决了上传普通文件，上传大文件的问题
+* 目前不支持事件callback
+* 主要是解决自己项目的业务场景
+* 支持上传文件驱动扩展，本模块默认实现的本地文件上传的驱动
+
 ![效果图](example.png)
 
 ## 使用方法
@@ -8,7 +17,7 @@
 
 ```
 
-composer require dungang/geetest
+composer require dungang/yii2-fex-webuploader
 
 ```
 
@@ -56,6 +65,8 @@ composer require dungang/geetest
 ```
 
 > 配置参数如下
+
+根据实际情况选择性配置，默认上传入口时本模块的控制器，也可以同个action配置在自己app的其他的控制器
 
 ```
     /**
