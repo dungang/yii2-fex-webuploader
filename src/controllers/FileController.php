@@ -19,16 +19,18 @@ class FileController extends Controller
 
     public function actions()
     {
+        $module = $this->module;
         return [
             'upload'=>[
                 'class'=>'dungang\webuploader\actions\UploadAction',
-                'uploaderDriver'=>$this->module->driver,
-                'saveDir' => $this->module->saveDir,
+                'uploaderDriver'=>$module->driver,
+                'saveDir' => $module->saveDir,
+                'accept' => $module->accept
             ],
             'delete' => [
                 'class' => 'dungang\webuploader\actions\DelAction',
-                'uploaderDriver'=>$this->module->driver,
-                'saveDir' => $this->module->saveDir,
+                'uploaderDriver'=>$module->driver,
+                'saveDir' => $module->saveDir,
             ]
         ];
     }

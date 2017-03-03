@@ -84,6 +84,7 @@ abstract class Uploader extends Component
      */
     public $saveDir = '/upload/webuploader';
 
+
     public function initFile()
     {
         $this->file = UploadedFile::getInstanceByName($this->fieldName);

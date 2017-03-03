@@ -13,10 +13,6 @@ use yii\helpers\Json;
 
 class UploadAction extends Action
 {
-    /**
-     * @var \dungang\webuploader\controllers\FileController
-     */
-    public $controller;
 
     public $saveDir = '/upload/webuploader';
 
@@ -24,6 +20,8 @@ class UploadAction extends Action
      * @var string
      */
     public $uploaderDriver;
+
+    public $accept = null;
 
     /**
      * @var \dungang\webuploader\components\Uploader
@@ -37,18 +35,25 @@ class UploadAction extends Action
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
-            $post['class']=$this->controller->module->driver;
+            $post['class']=$this->uploaderDriver;
             $post['saveDir'] = $this->saveDir;
             $this->uploader = \Yii::createObject($post);
             $this->uploader->initFile();
             if ($this->uploader->file->error === 0) {
 
-                if ($file = $this->uploader->writeFile()){
-                    $result['result'] = $file;
+                if ($this->checkExtension($this->uploader->file)) {
+                    if ($file = $this->uploader->writeFile()){
+                        $result['result'] = $file;
+                    } else {
+                        $result['error'] = [
+                            'code'=> '100',
+                            'message' => '上传失败',
+                        ];
+                    }
                 } else {
                     $result['error'] = [
-                        'code'=> '100',
-                        'message' => '上传失败',
+                        'code'=> '112',
+                        'message' => '不允许上传'.$this->uploader->file->extension.'格式的文件',
                     ];
                 }
 
@@ -68,5 +73,21 @@ class UploadAction extends Action
             ];
         }
         return Json::encode($result);
+    }
+
+    /**
+     * @param $file \yii\web\UploadedFile
+     * @return bool
+     */
+    protected function checkExtension($file) {
+        //如果是数组，则必须按照列表检查
+        if (is_array($this->accept)) {
+            if (in_array($file->extension,$this->accept)) {
+                return true;
+            }
+            return false;
+        }
+        //如果不是数组，则不检查文件后缀
+        return true;
     }
 }

@@ -22,10 +22,12 @@
             // 当有文件添加进来的时候
             uploader.on('fileQueued', function( file ) {
                 var _li = $(
-                        '<div id="' + file.id + '" class="file-item">' +
-                        '<div class="info">' + file.name + '</div>' +
-                        '<button type="button" class="close text-danger" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-                        '</div>'
+                        '<div id="' + file.id + '"  class="list-group-item file-item">' +
+                        '<div class="info h4">' + file.name +
+                        '<button type="button" class="close" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div></div>'
                     );
                 _li.find('button').click(function (event) {
                     event.preventDefault();
@@ -70,7 +72,11 @@
 
                 // 避免重复创建
                 if ( !_percent.length ) {
-                    _percent = $('<p class="progress"><span class="progress-bar progress-bar-success" role="progressbar" ></span></p>')
+                    _percent = $(
+                        '<p class="progress">' +
+                        '<span class="progress-bar progress-bar-success" role="progressbar" ></span>' +
+                        '</p>'
+                    )
                         .appendTo( _li )
                         .find('span');
                 }

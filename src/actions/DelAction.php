@@ -13,10 +13,6 @@ use yii\helpers\Json;
 
 class DelAction extends Action
 {
-    /**
-     * @var \dungang\webuploader\controllers\FileController
-     */
-    public $controller;
 
     public $saveDir = '/upload/webuploader';
 
