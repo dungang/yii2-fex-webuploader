@@ -41,6 +41,7 @@ composer require dungang/yii2-fex-webuploader
 //        'driver' => 'dungang\webuploader\components\LocalUploader',
 //        'driver' => [
                 'class'=>'dungang\webuploader\components\AliYunOSSUploader',
+                //Yii::$app->params['oss']
                 'paramKey'=>'oss'
             ],
     
