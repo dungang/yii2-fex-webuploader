@@ -82,7 +82,7 @@ abstract class Uploader extends Component
     /**
      * @var string 文件保存路径
      */
-    public $saveDir = '/upload/webuploader';
+    public $saveDir = 'upload/webuploader';
 
 
     /**

@@ -6,7 +6,7 @@
  * Time: 18:26
  */
 
-namespace vendor\dungang\webuploader\actions;
+namespace dungang\webuploader\actions;
 
 
 trait ActionTrait
@@ -15,7 +15,7 @@ trait ActionTrait
     /**
      * @var string
      */
-    public $saveDir = '/upload/webuploader';
+    public $saveDir = 'upload/webuploader';
 
     /**
      * @var string|array

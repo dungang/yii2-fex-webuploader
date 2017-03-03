@@ -8,7 +8,6 @@
 
 namespace dungang\webuploader\actions;
 
-use vendor\dungang\webuploader\actions\ActionTrait;
 use yii\base\Action;
 use yii\helpers\Json;
 
@@ -22,17 +21,19 @@ class DelAction extends Action
             'jsonrpc'=>'2.0',
         ];
         if ($post = \Yii::$app->request->post()) {
-            $delObj = $post['fileObj'];
-            unset($post[\Yii::$app->request->csrfParam]);
-            unset($post['fileObj']);
-            $this->instanceDriver($post);
-            if ($this->uploader->deleteFile($delObj)) {
-                $result['result'] = $delObj;
-            } else {
-                $result['error'] = [
-                    'code'=> '110',
-                    'message' => '文件删除失败',
-                ];
+            if(isset($post['fileObj'])) {
+                $delObj = $post['fileObj'];
+                unset($post[\Yii::$app->request->csrfParam]);
+                unset($post['fileObj']);
+                $this->instanceDriver($post);
+                if ($this->uploader->deleteFile($delObj)) {
+                    $result['result'] = $delObj;
+                } else {
+                    $result['error'] = [
+                        'code'=> '110',
+                        'message' => '文件删除失败',
+                    ];
+                }
             }
             $result['id'] = $this->uploader->id;
         } else {

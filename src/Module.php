@@ -28,7 +28,7 @@ class Module extends \yii\base\Module
     /**
      * @var string 上传文件保存的相对路径
      */
-    public $saveDir = '/upload/webuploader';
+    public $saveDir = 'upload/webuploader';
 
     /**
      * @var array 接受的文件类型

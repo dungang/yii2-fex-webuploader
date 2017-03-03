@@ -24,7 +24,7 @@ class LocalUploader extends Uploader
 
         $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
 
-        $path = \Yii::getAlias('@webroot') . $dir;
+        $path = \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir;
 
         $position = 0;
 

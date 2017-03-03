@@ -8,7 +8,6 @@
 
 namespace dungang\webuploader\actions;
 
-use vendor\dungang\webuploader\actions\ActionTrait;
 use yii\base\Action;
 use yii\helpers\Json;
 
@@ -16,6 +15,8 @@ class UploadAction extends Action
 {
 
     use ActionTrait;
+
+    public $accept;
 
     public function run()
     {

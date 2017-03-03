@@ -31,6 +31,7 @@
                         '</button>' +
                         '</div></div>'
                     );
+                //删除文件
                 _li.find('button').click(function (event) {
                     event.preventDefault();
                     switch (file.getStatus()) {
