@@ -14,8 +14,6 @@ use yii\web\AssetBundle;
 class JQueryWebUploaderAsset extends AssetBundle
 {
 
-    public $sourcePath = __DIR__ . '/js';
-
     public $js = [
         'jquery-webuploader.js',
     ];
@@ -23,4 +21,9 @@ class JQueryWebUploaderAsset extends AssetBundle
     public $depends = [
         'yii\bootstrap\BootstrapPluginAsset'
     ];
+
+    public function init()
+    {
+        $this->sourcePath = __DIR__ . '/js';
+    }
 }
