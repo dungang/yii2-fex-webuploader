@@ -24,7 +24,8 @@ class LocalUploader extends Uploader
 
         $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
 
-        $path = \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir;
+        $path = BaseFileHelper::normalizePath(
+            \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir);
 
         $position = 0;
 
@@ -63,8 +64,8 @@ class LocalUploader extends Uploader
 
     public function deleteFile($file)
     {
-        $file = ltrim($file,'/\\');
-        $dir = ltrim($this->saveDir,'/\\');
+        $file = BaseFileHelper::normalizePath(ltrim($file,'/\\'));
+        $dir = BaseFileHelper::normalizePath(ltrim($this->saveDir,'/\\'));
         $prefix = substr($file,0,strlen($dir));
         if (strcasecmp($prefix,$dir)==0) {
             $path = \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $file;

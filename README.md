@@ -141,9 +141,7 @@ composer require dungang/yii2-fex-webuploader
  * Date: 2017/3/2
  * Time: 11:24
  */
-
 namespace dungang\webuploader\components;
-
 
 use yii\helpers\BaseFileHelper;
 
@@ -160,7 +158,8 @@ class LocalUploader extends Uploader
 
         $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
 
-        $path = \Yii::getAlias('@webroot') . $dir;
+        $path = BaseFileHelper::normalizePath(
+            \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir);
 
         $position = 0;
 
@@ -168,7 +167,7 @@ class LocalUploader extends Uploader
         {
             $targetFile = $path . DIRECTORY_SEPARATOR . $file;
             if($this->chunked) {
-                if ($this->chunked === 0 ) {
+                if ($this->chunk === 0 ) {
                     $position = 0;
                     if (file_exists($targetFile)) {
                         @unlink($targetFile);
@@ -199,8 +198,8 @@ class LocalUploader extends Uploader
 
     public function deleteFile($file)
     {
-        $file = ltrim($file,'/\\');
-        $dir = ltrim($this->saveDir,'/\\');
+        $file = BaseFileHelper::normalizePath(ltrim($file,'/\\'));
+        $dir = BaseFileHelper::normalizePath(ltrim($this->saveDir,'/\\'));
         $prefix = substr($file,0,strlen($dir));
         if (strcasecmp($prefix,$dir)==0) {
             $path = \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $file;
