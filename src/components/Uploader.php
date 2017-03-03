@@ -85,9 +85,16 @@ abstract class Uploader extends Component
     public $saveDir = '/upload/webuploader';
 
 
+    /**
+     * @var mixed 额外的参数
+     */
+    public $extraData = 'dddd';
+
+
     public function initFile()
     {
         $this->file = UploadedFile::getInstanceByName($this->fieldName);
+        $this->chunkFileSize = $this->file->size;
     }
 
 

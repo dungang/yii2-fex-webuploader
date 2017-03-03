@@ -20,5 +20,8 @@ class WebUploaderAsset extends AssetBundle
     public $js = [
         'webuploader.js'
     ];
+    public $depends = [
+        'yii\web\YiiAsset'
+    ];
 
 }

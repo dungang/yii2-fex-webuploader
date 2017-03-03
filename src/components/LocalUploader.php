@@ -32,7 +32,7 @@ class LocalUploader extends Uploader
         {
             $targetFile = $path . DIRECTORY_SEPARATOR . $file;
             if($this->chunked) {
-                if ($this->chunked === 0 ) {
+                if ($this->chunk === 0 ) {
                     $position = 0;
                     if (file_exists($targetFile)) {
                         @unlink($targetFile);

@@ -8,7 +8,9 @@
         return this.each(function () {
             var _this = $(this);
             var _list = _this.find('.uploader-list');
+            var extraData = {};
             opts.options.formData.guid = WebUploader.guid();
+            opts.options.formData.extraData = '';
             var uploader = WebUploader.create(opts.options);
             var _files = {};
             var _hidden = _this.find('input[type=hidden]');
@@ -81,7 +83,13 @@
                 var value = percentage * 100 + '%';
                 _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
             });
-            
+
+            //驱动要求在保持会话的其他的参数回传
+            uploader.on('uploadBeforeSend',function (obj,data) {
+                if (extraData[obj.file.id]) {
+                    data.extraData = extraData[obj.file.id];
+                }
+            });
             
             uploader.on('uploadAccept',function (obj,ret) {
                 if (ret.error) {
@@ -89,6 +97,11 @@
                     alert(ret.error.message);
                     return false;
                 }
+                //驱动要求在保持会话的其他的参数接受
+                if (ret.extraData) {
+                    extraData[obj.file.id] = ret.extraData;
+                }
+
                 return true;
             });
 

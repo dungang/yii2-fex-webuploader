@@ -8,25 +8,14 @@
 
 namespace dungang\webuploader\actions;
 
+use vendor\dungang\webuploader\actions\ActionTrait;
 use yii\base\Action;
 use yii\helpers\Json;
 
 class UploadAction extends Action
 {
 
-    public $saveDir = '/upload/webuploader';
-
-    /**
-     * @var string
-     */
-    public $uploaderDriver;
-
-    public $accept = null;
-
-    /**
-     * @var \dungang\webuploader\components\Uploader
-     */
-    protected $uploader;
+    use ActionTrait;
 
     public function run()
     {
@@ -35,9 +24,7 @@ class UploadAction extends Action
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
-            $post['class']=$this->uploaderDriver;
-            $post['saveDir'] = $this->saveDir;
-            $this->uploader = \Yii::createObject($post);
+            $this->instanceDriver($post);
             $this->uploader->initFile();
             if ($this->uploader->file->error === 0) {
 
@@ -66,6 +53,7 @@ class UploadAction extends Action
             $result['id'] = $this->uploader->id;
             $result['chunk'] = $this->uploader->chunk;
             $result['chunks'] = $this->uploader->chunks;
+            $result['extraData'] = $this->uploader->extraData;
         } else {
             $result['error'] = [
                 'code'=> '400',

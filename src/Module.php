@@ -21,7 +21,7 @@ class Module extends \yii\base\Module
     public $controllerNamespace = 'dungang\webuploader\controllers';
 
     /**
-     * @var string 上传文件的驱动
+     * @var string|array 上传文件的驱动
      */
     public $driver = 'dungang\webuploader\components\LocalUploader';
 

@@ -8,23 +8,14 @@
 
 namespace dungang\webuploader\actions;
 
+use vendor\dungang\webuploader\actions\ActionTrait;
 use yii\base\Action;
 use yii\helpers\Json;
 
 class DelAction extends Action
 {
 
-    public $saveDir = '/upload/webuploader';
-
-    /**
-     * @var string
-     */
-    public $uploaderDriver;
-
-    /**
-     * @var \dungang\webuploader\components\Uploader
-     */
-    protected $uploader;
+    use ActionTrait;
 
     public function run(){
         $result = [
@@ -34,9 +25,7 @@ class DelAction extends Action
             $delObj = $post['fileObj'];
             unset($post[\Yii::$app->request->csrfParam]);
             unset($post['fileObj']);
-            $post['class']=$this->uploaderDriver;
-            $post['saveDir'] = $this->saveDir;
-            $this->uploader = \Yii::createObject($post);
+            $this->instanceDriver($post);
             if ($this->uploader->deleteFile($delObj)) {
                 $result['result'] = $delObj;
             } else {
