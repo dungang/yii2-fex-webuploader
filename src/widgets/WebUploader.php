@@ -102,7 +102,7 @@ class WebUploader extends InputWidget
         $this->registerPlugin('webuploader');
         $input = $this->renderInput($this->id);
         return Html::tag('div', $input .
-            '<div  class="list-group uploader-list"></div><div id="'.$pick.'">'+$this->pickTitle+'</div>',
+            '<div  class="list-group uploader-list"></div><div id="'.$pick.'">'. $this->pickTitle .'</div>',
             $this->options);
     }
 
