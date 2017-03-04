@@ -83,8 +83,8 @@
                         .appendTo( _li )
                         .find('span');
                 }
-                var value = percentage * 100 + '%';
-                _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
+                // var value = percentage * 100 + '%';
+                // _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
             });
 
             // 当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
@@ -108,6 +108,11 @@
                 //接受
                 if (ret.extraData) {
                     extraData[obj.file.id] = ret.extraData;
+                }
+                if (ret.chunks) {
+                    var value = (parseInt(ret.chunks) / parseInt(ret.chunk)) * 100;
+                    var _percent = _this.find('#'+obj.file.id+'> .progress span');
+                    _percent.css('width', value ).html(parseInt(value) + '%');
                 }
 
                 return true;
