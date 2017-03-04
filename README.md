@@ -220,12 +220,12 @@ Uploader 驱动事件
 * ***beforeDeleteFile*** 在`deleteFile`方法调用之前触发
 * ***afterDeleteFile*** 在 `deleteFile` 方法调用之后触发
 
+使用场景
+
 * 使用非本地驱动的时候，如果是成熟项目，以aliyun oss 举例来说，原先的项目的配置的属性`key`
 可能和驱动本身要求的`key`的名称不一样这个时候需要在初始化之前获取到原先的配置进行转换成驱动要求的,
 则可以绑定 `beforeInitUploader` 事件来处理此工作。
-
 * 比如我们需要上传文件之后，把文件的存储信息保存到数据库，则可以绑定 `afterWriteFile` 事件来处理此工作。
-
 * 比如我们删除文件，要删除对应的数据库信息，则可以绑定 `afterDeleteFile` 事件来处理此工作。
 
 
