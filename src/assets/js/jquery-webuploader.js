@@ -131,10 +131,10 @@
                 _this.find( '#'+file.id ).addClass('upload-state-done');
                 if (response.result) {
                     if (opts.options.chunked) {
-                        //if (response.chunks - response.chunk == 1) {
+                        if (response.chunks - response.chunk == 1) {
                             //_this.find('input[type=hidden]').val(response.result);
                             _files[file.id] = response.result;
-                        //}
+                        }
                     } else {
                         //_this.find('input[type=hidden]').val(response.result);
                         _files[file.id] = response.result;
