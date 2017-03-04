@@ -145,6 +145,31 @@
                 }
                 _error.text('上传失败');
             });
+            
+            uploader.on('error',function (type) {
+                var args = [].slice.call( arguments, 1 );
+                var msg = false;
+                switch (type){
+                    case 'Q_EXCEED_NUM_LIMIT':
+                        msg = args[1].name + '添加失败，最多添加的文件数量为：'+args[0];
+                        break;
+                    case 'Q_EXCEED_SIZE_LIMIT':
+                        msg = args[1].name + '添加失败，文件总大小超出，总大小为：'+ WebUploader.formatSize(args[0]);
+                        break;
+                    case 'F_EXCEED_SIZE':
+                        msg = args[1].name + '添加失败，该文件大小超出' + WebUploader.formatSize(args[0]);
+                        break;
+                    case 'Q_TYPE_DENIED':
+                        msg = args[1].name + '添加失败，文件类型不满足';
+                        break;
+                    case 'F_DUPLICATE':
+                        msg = args[1].name + '添加失败，文件重复了';
+                        break;
+                }
+                if (msg) {
+                    alert(msg);
+                }
+            });
 
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess',function (file,response) {
