@@ -8,11 +8,15 @@
         return this.each(function () {
             var _this = $(this);
             var _list = _this.find('.uploader-list');
+            //每个文件的额外参数
             var extraData = {};
+            //每个文件上传到服务端返回的文件名称
+            var _files = {};
+            //每个文件的上传的进度。安装文件分片的数量来模拟进度，不是精度模拟（按文件的大小）
+            var _progress = {};
             opts.options.formData.guid = WebUploader.guid();
             opts.options.formData.extraData = '';
             var uploader = WebUploader.create(opts.options);
-            var _files = {};
             var _hidden = _this.find('input[type=hidden]');
             _hidden.on('update',function () {
                 var results = [];
@@ -75,13 +79,12 @@
 
                 // 避免重复创建
                 if ( !_percent.length ) {
-                    _percent = $(
+                    //_percent =
+                    $(
                         '<p class="progress">' +
                         '<span class="progress-bar progress-bar-success" role="progressbar" ></span>' +
                         '</p>'
-                    )
-                        .appendTo( _li )
-                        .find('span');
+                    ).appendTo( _li ).find('span');
                 }
                 // var value = percentage * 100 + '%';
                 // _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
@@ -109,10 +112,22 @@
                 if (ret.extraData) {
                     extraData[obj.file.id] = ret.extraData;
                 }
-                if (ret.chunks) {
-                    var value = (parseInt(ret.chunks) / parseInt(ret.chunk)) * 100;
-                    var _percent = _this.find('#'+obj.file.id+'> .progress span');
-                    _percent.css('width', value ).html(parseInt(value) + '%');
+
+                var _percent = _this.find('#'+obj.file.id+'> .progress span');
+
+                if (uploader.options.chunked && ret.chunks) {
+                    if (!_progress[obj.file.id]) {
+                        _progress[obj.file.id] = 1;
+                    } else {
+                        _progress[obj.file.id] += 1;
+                    }
+                    var chunk = _progress[obj.file.id];
+                    var _percentage = parseInt(chunk)/ parseInt(ret.chunks);
+                    var value = _percentage * 100 + '%';
+                    _percent.css('width', value ).html(parseInt(_percentage * 100) + '%');
+                    console.log('chunks:'+ret.chunks + ',chunk:'+ret.chunk + ',percentage:'+value);
+                } else {
+                    _percent.css('width', '100%' ).html('100%');
                 }
 
                 return true;
