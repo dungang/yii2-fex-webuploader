@@ -44,11 +44,14 @@ class AliYunOSSUploader extends Uploader
      */
     public $bucket;
 
-    public function init()
+    /**
+     *  可以添加行为来初始化config,如果config为空则通过 如：params[oss]获取
+     */
+    public function initUploader()
     {
-        parent::init();
-
-        $this->config = \Yii::$app->params[$this->paramKey];
+        if (empty($this->config)) {
+            $this->config = \Yii::$app->params[$this->paramKey];
+        }
         $JohnLuiOSS = '\JohnLui\AliyunOSS\AliyunOSS';
         $clientClass= '\Aliyun\OSS\OSSClient';
         //由于JohnLuiOSS的ossClient不是公开属性，所以先实例化，加载文件

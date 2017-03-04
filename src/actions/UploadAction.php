@@ -8,6 +8,8 @@
 
 namespace dungang\webuploader\actions;
 
+use dungang\webuploader\components\Uploader;
+use dungang\webuploader\components\UploaderEvent;
 use yii\base\Action;
 use yii\helpers\Json;
 
@@ -28,10 +30,13 @@ class UploadAction extends Action
             $this->instanceDriver($post);
             $this->uploader->initFile();
             if ($this->uploader->file->error === 0) {
-
                 if ($this->checkExtension($this->uploader->file)) {
+                    $event = new UploaderEvent();
+                    $this->uploader->trigger(Uploader::EVENT_BEFORE_WRITE_FILE,$event);
                     if ($file = $this->uploader->writeFile()){
                         $result['result'] = $file;
+                        $event->file = $file;
+                        $this->uploader->trigger(Uploader::EVENT_AFTER_WRITE_FILE,$event);
                     } else {
                         $result['error'] = [
                             'code'=> '100',

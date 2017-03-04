@@ -129,7 +129,7 @@
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess',function (file,response) {
                 _this.find( '#'+file.id ).addClass('upload-state-done');
-                if (!response.error) {
+                if (response.result) {
                     if (opts.options.chunked) {
                         if (response.chunks - response.chunk == 1) {
                             //_this.find('input[type=hidden]').val(response.result);

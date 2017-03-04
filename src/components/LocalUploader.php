@@ -8,7 +8,6 @@
 
 namespace dungang\webuploader\components;
 
-
 use yii\helpers\BaseFileHelper;
 
 class LocalUploader extends Uploader
@@ -24,8 +23,7 @@ class LocalUploader extends Uploader
 
         $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
 
-        $path = BaseFileHelper::normalizePath(
-            \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir);
+        $path =  \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir;
 
         $position = 0;
 
@@ -55,7 +53,7 @@ class LocalUploader extends Uploader
                     flock($out, LOCK_UN);
                 }
                 @fclose($out);
-                return $dir . DIRECTORY_SEPARATOR . $file;
+                return BaseFileHelper::normalizePath( $dir . DIRECTORY_SEPARATOR . $file);
             }
 
         }

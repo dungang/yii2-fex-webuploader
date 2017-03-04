@@ -25,7 +25,6 @@ composer require dungang/yii2-fex-webuploader
 
 
 ```
-
 'webuploader'=>[
     'class'=>'dungang\webuploader\Module',
 //下面是默认配置    
@@ -142,6 +141,7 @@ composer require dungang/yii2-fex-webuploader
  * Date: 2017/3/2
  * Time: 11:24
  */
+
 namespace dungang\webuploader\components;
 
 use yii\helpers\BaseFileHelper;
@@ -159,8 +159,7 @@ class LocalUploader extends Uploader
 
         $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
 
-        $path = BaseFileHelper::normalizePath(
-            \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir);
+        $path =  \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir;
 
         $position = 0;
 
@@ -190,7 +189,7 @@ class LocalUploader extends Uploader
                     flock($out, LOCK_UN);
                 }
                 @fclose($out);
-                return $dir . DIRECTORY_SEPARATOR . $file;
+                return BaseFileHelper::normalizePath( $dir . DIRECTORY_SEPARATOR . $file);
             }
 
         }
@@ -209,6 +208,57 @@ class LocalUploader extends Uploader
         return false;
     }
 }
+```
+
+> 支持事件
+
+Uploader 驱动事件
+
+* ***beforeInitUploader***  在`initUploader`方法调用之前触发
+* ***beforeWriteFile*** 在`writeFile`方法调用之前触发
+* ***afterWriteFile*** 在`writeFile`方法调用之后触发
+* ***beforeDeleteFile*** 在`deleteFile`方法调用之前触发
+* ***afterDeleteFile*** 在 `deleteFile` 方法调用之后触发
+
+* 使用非本地驱动的时候，如果是成熟项目，以aliyun oss 举例来说，原先的项目的配置的属性`key`
+可能和驱动本身要求的`key`的名称不一样这个时候需要在初始化之前获取到原先的配置进行转换成驱动要求的,
+则可以绑定 `beforeInitUploader` 事件来处理此工作。
+
+* 比如我们需要上传文件之后，把文件的存储信息保存到数据库，则可以绑定 `afterWriteFile` 事件来处理此工作。
+
+* 比如我们删除文件，要删除对应的数据库信息，则可以绑定 `afterDeleteFile` 事件来处理此工作。
+
+
+
+绑定事件的方式，配置行为
+
+```
+'webuploader'=>[
+    'class'=>'dungang\webuploader\Module',
+    [
+        'driver' => [
+                'class'=>'dungang\webuploader\components\AliYunOSSUploader',
+                //Yii::$app->params['oss']
+                'paramKey'=>'oss',
+                //参考Yii2行为配置
+                'as aliyunBehavior'=>'behiaviorClassName'
+            ],
+    ]
+],
+```
+
+YII2行为配置的方法
+
+```
+[
+    'as myBehavior2' => MyBehavior::className(),
+
+    'as myBehavior3' => [
+        'class' => MyBehavior::className(),
+        'prop1' => 'value1',
+        'prop2' => 'value2',
+    ],
+]
 ```
 
 ## 协议

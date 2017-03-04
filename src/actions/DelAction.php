@@ -8,6 +8,8 @@
 
 namespace dungang\webuploader\actions;
 
+use dungang\webuploader\components\Uploader;
+use dungang\webuploader\components\UploaderEvent;
 use yii\base\Action;
 use yii\helpers\Json;
 
@@ -21,13 +23,17 @@ class DelAction extends Action
             'jsonrpc'=>'2.0',
         ];
         if ($post = \Yii::$app->request->post()) {
+            unset($post[\Yii::$app->request->csrfParam]);
+            $this->instanceDriver($post);
             if(isset($post['fileObj'])) {
                 $delObj = $post['fileObj'];
-                unset($post[\Yii::$app->request->csrfParam]);
                 unset($post['fileObj']);
-                $this->instanceDriver($post);
+                $event = new UploaderEvent();
+                $this->controller->module->trigger(Uploader::EVENT_BEFORE_DELETE_FILE, $event);
                 if ($this->uploader->deleteFile($delObj)) {
                     $result['result'] = $delObj;
+                    $event->file = $delObj;
+                    $this->controller->module->trigger(Uploader::EVENT_AFTER_DELETE_FILE,$event);
                 } else {
                     $result['error'] = [
                         'code'=> '110',
