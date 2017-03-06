@@ -1,6 +1,6 @@
 {
   "name": "dungang/yii2-fex-webuploader",
-  "description": "A  webuploader for Yii2, base on mysqli",
+  "description": "A  webuploader for Yii2",
   "license": "MIT",
   "minimum-stability": "dev",
   "authors": [
