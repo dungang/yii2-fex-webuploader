@@ -56,9 +56,9 @@ abstract class Uploader extends Component
     public $chunk = 0;
 
     /**
-     * @var int chunk的大小
+     * @var int chunk的大小  5 * 1024 * 1024 = 5M
      */
-    public $chunkSize = 5 * 1024 * 1024;
+    public $chunkSize = 5242880;
 
     /**
      * @var int 当前文件大小

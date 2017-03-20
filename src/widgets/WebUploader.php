@@ -54,7 +54,7 @@ class WebUploader extends InputWidget
     public $fileSingleSizeLimit = 104857600;
 
     /**
-     * @var int 分片文件长度 5 * 1024 * 1024 = 5
+     * @var int 分片文件长度 5 * 1024 * 1024 = 5M
      */
     public $chunkSize = 5242880;
 

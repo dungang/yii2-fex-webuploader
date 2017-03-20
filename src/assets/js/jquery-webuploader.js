@@ -8,12 +8,15 @@
         return this.each(function () {
             var _this = $(this);
             var _list = _this.find('.uploader-list');
+            //每个文件的额外参数
             var extraData = {};
+            //每个文件的上传的进度。安装文件分片的数量来模拟进度，不是精度模拟（按文件的大小）
             var fileUploadedParts={};
+            //每个文件上传到服务端返回的文件名称
+            var _files = {};
             opts.options.formData.guid = WebUploader.guid();
             opts.options.formData.extraData = '{}';
             var uploader = WebUploader.create(opts.options);
-            var _files = {};
             var _hidden = _this.find('input[type=hidden]');
             _hidden.on('update',function () {
                 var results = [];
@@ -77,13 +80,12 @@
 
                 // 避免重复创建
                 if ( !_percent.length ) {
-                    _percent = $(
+                    //_percent =
+                    $(
                         '<p class="progress">' +
-                        '<span class="progress-bar progress-bar-success" style="width: 1%" role="progressbar" >1%</span>' +
+                        '<span class="progress-bar progress-bar-success" style="width: 5%" role="progressbar" >5%</span>' +
                         '</p>'
-                    )
-                        .appendTo( _li )
-                        .find('span');
+                    ).appendTo( _li ).find('span');
                 }
                 // var value = percentage * 100 + '%';
                 // _percent.css('width', value ).html(parseInt(percentage * 100) + '%');
@@ -131,6 +133,31 @@
                     _error = $('<div class="error"></div>').appendTo( _li );
                 }
                 _error.text('上传失败');
+            });
+            
+            uploader.on('error',function (type) {
+                var args = [].slice.call( arguments, 1 );
+                var msg = false;
+                switch (type){
+                    case 'Q_EXCEED_NUM_LIMIT':
+                        msg = args[1].name + '添加失败，最多添加的文件数量为：'+args[0];
+                        break;
+                    case 'Q_EXCEED_SIZE_LIMIT':
+                        msg = args[1].name + '添加失败，文件总大小超出，总大小为：'+ WebUploader.formatSize(args[0]);
+                        break;
+                    case 'F_EXCEED_SIZE':
+                        msg = args[1].name + '添加失败，该文件大小超出' + WebUploader.formatSize(args[0]);
+                        break;
+                    case 'Q_TYPE_DENIED':
+                        msg = args[1].name + '添加失败，文件类型不满足';
+                        break;
+                    case 'F_DUPLICATE':
+                        msg = args[1].name + '添加失败，文件重复了';
+                        break;
+                }
+                if (msg) {
+                    alert(msg);
+                }
             });
 
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
