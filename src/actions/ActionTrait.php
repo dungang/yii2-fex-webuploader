@@ -37,7 +37,6 @@ trait ActionTrait
         $post['saveDir'] = $this->saveDir;
 
         $config = [];
-
         foreach($props as $prop=>$def) {
            if (isset($post[$prop])) {
                $config[$prop] = $post[$prop];

@@ -94,7 +94,7 @@ abstract class Uploader extends Component
     /**
      * @var mixed 额外的参数
      */
-    public $extraData = 'dddd';
+    public $extraData = '{}';
 
     /**
      * final的目的是防止被覆盖

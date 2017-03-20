@@ -58,6 +58,8 @@ class WebUploader extends InputWidget
      */
     public $chunkSize = 5242880;
 
+    public $threads= 1;
+
     /**
      * @var array
      */
@@ -101,6 +103,7 @@ class WebUploader extends InputWidget
         $this->clientOptions['options']['fileNumLimit'] = $this->fileNumLimit;
         $this->clientOptions['options']['fileSingleSizeLimit'] = $this->fileSingleSizeLimit;
         $this->clientOptions['options']['formData'] = $this->formData;
+        $this->clientOptions['options']['threads'] = $this->threads;
         $this->registerPlugin('webuploader');
         $input = $this->renderInput($this->id);
         return Html::tag('div', $input .

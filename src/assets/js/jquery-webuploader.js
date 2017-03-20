@@ -9,8 +9,9 @@
             var _this = $(this);
             var _list = _this.find('.uploader-list');
             var extraData = {};
+            var fileUploadedParts={};
             opts.options.formData.guid = WebUploader.guid();
-            opts.options.formData.extraData = '';
+            opts.options.formData.extraData = '{}';
             var uploader = WebUploader.create(opts.options);
             var _files = {};
             var _hidden = _this.find('input[type=hidden]');
@@ -25,6 +26,7 @@
 
             // 当有文件添加进来的时候
             uploader.on('fileQueued', function( file ) {
+                fileUploadedParts[file.id] = 0;
                 var _li = $(
                         '<div id="' + file.id + '"  class="list-group-item file-item">' +
                         '<div class="info h4">' + file.name + '['+WebUploader.formatSize(file.size)+']'+
@@ -77,7 +79,7 @@
                 if ( !_percent.length ) {
                     _percent = $(
                         '<p class="progress">' +
-                        '<span class="progress-bar progress-bar-success" role="progressbar" ></span>' +
+                        '<span class="progress-bar progress-bar-success" style="width: 1%" role="progressbar" >1%</span>' +
                         '</p>'
                     )
                         .appendTo( _li )
@@ -89,7 +91,6 @@
 
             // 当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
             uploader.on('uploadBeforeSend',function (obj,data) {
-
                 // 除本地驱动，其他驱动可能需要在客户端和服务端来回传递而外的参数
                 // 发送
                 if (extraData[obj.file.id]) {
@@ -110,9 +111,10 @@
                     extraData[obj.file.id] = ret.extraData;
                 }
                 if (ret.chunks) {
-                    var value = (parseInt(ret.chunks) / parseInt(ret.chunk)) * 100;
+                    fileUploadedParts[obj.file.id] +=1;
+                    var value = (parseInt(fileUploadedParts[obj.file.id]) / parseInt(ret.chunks)) * 100;
                     var _percent = _this.find('#'+obj.file.id+'> .progress span');
-                    _percent.css('width', value ).html(parseInt(value) + '%');
+                    _percent.css('width', parseInt(value) + '%' ).html(parseInt(value) + '%');
                 }
 
                 return true;

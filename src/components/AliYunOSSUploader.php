@@ -25,6 +25,8 @@ class AliYunOSSUploader extends Uploader
     const UPLOAD_ID = 'UploadId';
     const PART_NUMBER = 'PartNumber';
     const PART_SIZE = 'PartSize';
+    const PART_ETAG = 'ETag';
+    const PART_ETAGS = 'PartETags';
 
     const ACCESS_KEY_ID = 'AccessKeyId';
     const ACCESS_KEY_SECRET = 'AccessKeySecret';
@@ -68,7 +70,11 @@ class AliYunOSSUploader extends Uploader
         ]);
 
         $this->bucket = $this->config['Bucket'];
+        $this->extraData = json_decode($this->extraData,JSON_UNESCAPED_UNICODE);
 
+        if ($this->chunks > 0) {
+            $this->chunked = true;
+        }
     }
 
     /**
@@ -88,28 +94,41 @@ class AliYunOSSUploader extends Uploader
 
         //除了最后一块Part，其他Part的大小不能小于100KB，否则会导致在调用CompleteMultipartUpload接口的时候失败
         $minChunkSize = 100 * 1024;
-        if($this->size >= $minChunkSize && $this->chunked) {
-            if ($this->chunk === 0 ) {
+        if(intval($this->size) >= $minChunkSize && $this->chunked) {
+            if ($this->chunk == 0 ) {
                 $result = $this->client->initiateMultipartUpload([
                     self::BUCKET =>$this->bucket,
                     self::KEY => $key
                 ]);
-                if ($result && $result->getUploadId() ) {
-                    $this->extraData = $result->getUploadId();
+                if ($result) {
+                    $this->extraData[self::UPLOAD_ID] = $result->getUploadId();
                 }
             }
             $handle = fopen($this->file->tempName, 'r');
             $objResult = $this->client->uploadPart([
                     self::BUCKET => $this->bucket,
                     self::KEY => $key,
-                    self::UPLOAD_ID => $this->extraData,
+                    self::UPLOAD_ID => $this->extraData[self::UPLOAD_ID],
                     self::CONTENT => $handle,
                     self::PART_NUMBER => $partNumber,
                     self::PART_SIZE => $this->chunkFileSize
             ]);
             fclose($handle);
-
             if ($objResult && $objResult->getETag()){
+
+                $this->extraData[self::PART_ETAGS][] = [
+                    self::PART_NUMBER=>$partNumber,
+                    self::PART_ETAG => $objResult->getETag()
+                ];
+
+                if ($partNumber == $this->chunks) {
+                    $this->client->completeMultipartUpload([
+                        self::BUCKET => $this->bucket,
+                        self::KEY => $key,
+                        self::UPLOAD_ID => $this->extraData[self::UPLOAD_ID],
+                        self::PART_ETAGS => $this->extraData[self::PART_ETAGS]
+                    ]);
+                }
                 return $key;
             }
 

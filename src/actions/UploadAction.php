@@ -59,7 +59,7 @@ class UploadAction extends Action
             $result['id'] = $this->uploader->id;
             $result['chunk'] = $this->uploader->chunk;
             $result['chunks'] = $this->uploader->chunks;
-            $result['extraData'] = $this->uploader->extraData;
+            $result['extraData'] = json_encode($this->uploader->extraData);
         } else {
             $result['error'] = [
                 'code'=> '400',
