@@ -21,7 +21,7 @@
             _hidden.on('update',function () {
                 var results = [];
                 for(var f in _files) {
-                    results.push(_files[f]);
+                    if(_files[f]) results.push(_files[f]);
                 }
                 _hidden.val(results.join(','));
             });
@@ -45,6 +45,7 @@
                         case 'inited':
                         case 'queued':
                             uploader.removeFile(file,true);
+                            _files[file.id] = null;
                             break;
                         case 'error':
                         case 'invalid':
@@ -52,17 +53,20 @@
                         case 'progress':
                             uploader.cancelFile(file);
                             uploader.removeFile(file,true);
+                            _files[file.id] = null;
                             _hidden.trigger('update');
                             break;
                         case 'complete':
-                            uploader.removeFile(file,true);
-                            if (opts.delPoint) {
-                                $.post(opts.delPoint,{
-                                    fileObj:_files[file.id],
-                                    id:file.id
-                                });
-                                _files[file.id] = null;
-                                _hidden.trigger('update');
+                            if(confirm("Are you sure ?\n确定删除吗？")) {
+                                uploader.removeFile(file,true);
+                                if (opts.delPoint) {
+                                    $.post(opts.delPoint,{
+                                        fileObj:_files[file.id],
+                                        id:file.id
+                                    });
+                                    _files[file.id] = null;
+                                    _hidden.trigger('update');
+                                }
                             }
                             break;
                     }
