@@ -32,22 +32,14 @@ trait ActionTrait
      */
     public function instanceDriver($post)
     {
-        $props = get_class_vars('\dungang\storage\Driver');
         $post['saveDir'] = $this->saveDir;
-        $config = [];
-        foreach($props as $prop=>$def) {
-           if (isset($post[$prop])) {
-               $config[$prop] = $post[$prop];
-           } else {
-               $config[$prop] = $def;
-           }
-        }
         if (is_array($this->driver)){
-            $this->driver = array_merge($this->driver,$config);
+            $this->driver = array_merge($this->driver);
             $this->driverInstance = \Yii::createObject($this->driver);
         } else {
             $config['class']=$this->driver;
             $this->driverInstance = \Yii::createObject($config);
         }
+        $this->driverInstance->loadPostData($post);
     }
 }

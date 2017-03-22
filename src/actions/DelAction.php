@@ -24,7 +24,9 @@ class DelAction extends Action
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
+
             $this->instanceDriver($post);
+
             if(isset($post['fileObj'])) {
                 $delObj = $post['fileObj'];
                 unset($post['fileObj']);

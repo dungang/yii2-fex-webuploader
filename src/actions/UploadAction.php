@@ -35,14 +35,15 @@ class UploadAction extends Action
                 if ($this->checkExtension($file)) {
                     $event = new StorageEvent();
                     $this->driverInstance->trigger(Driver::EVENT_BEFORE_WRITE_FILE,$event);
-                    if ($file = $this->driverInstance->writeFile()){
-                        $result['result'] = $file;
-                        $event->file = $file;
+                    $rst = $this->driverInstance->writeFile();
+                    if ($rst['code']==0){
+                        $result['result'] = $rst['object'];
+                        $event->file = $rst['object'];
                         $this->driverInstance->trigger(Driver::EVENT_AFTER_WRITE_FILE,$event);
                     } else {
                         $result['error'] = [
                             'code'=> '100',
-                            'message' => '上传失败',
+                            'message' => $rst['message'],
                         ];
                     }
                 } else {
