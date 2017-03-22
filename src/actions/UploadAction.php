@@ -8,10 +8,11 @@
 
 namespace dungang\webuploader\actions;
 
-use dungang\webuploader\components\Uploader;
-use dungang\webuploader\components\UploaderEvent;
+
 use yii\base\Action;
 use yii\helpers\Json;
+use dungang\storage\Driver;
+use dungang\storage\StorageEvent;
 
 class UploadAction extends Action
 {
@@ -28,15 +29,16 @@ class UploadAction extends Action
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
             $this->instanceDriver($post);
-            $this->uploader->initFile();
-            if ($this->uploader->file->error === 0) {
-                if ($this->checkExtension($this->uploader->file)) {
-                    $event = new UploaderEvent();
-                    $this->uploader->trigger(Uploader::EVENT_BEFORE_WRITE_FILE,$event);
-                    if ($file = $this->uploader->writeFile()){
+            $this->driverInstance->initFile();
+            $file = $this->driverInstance->file;
+            if ($file->error === 0) {
+                if ($this->checkExtension($file)) {
+                    $event = new StorageEvent();
+                    $this->driverInstance->trigger(Driver::EVENT_BEFORE_WRITE_FILE,$event);
+                    if ($file = $this->driverInstance->writeFile()){
                         $result['result'] = $file;
                         $event->file = $file;
-                        $this->uploader->trigger(Uploader::EVENT_AFTER_WRITE_FILE,$event);
+                        $this->driverInstance->trigger(Driver::EVENT_AFTER_WRITE_FILE,$event);
                     } else {
                         $result['error'] = [
                             'code'=> '100',
@@ -46,20 +48,20 @@ class UploadAction extends Action
                 } else {
                     $result['error'] = [
                         'code'=> '401',
-                        'message' => '不允许上传'.$this->uploader->file->extension.'格式的文件',
+                        'message' => '不允许上传'.$file->extension.'格式的文件',
                     ];
                 }
 
             } else {
                 $result['error'] = [
-                    'code'=> 100 + $this->uploader->file->error,
-                    'message' => $this->uploader->message($this->uploader->file->error),
+                    'code'=> 100 + $file->error,
+                    'message' => $this->driverInstance->message($file->error),
                 ];
             }
-            $result['id'] = $this->uploader->id;
-            $result['chunk'] = $this->uploader->chunk;
-            $result['chunks'] = $this->uploader->chunks;
-            $result['extraData'] = json_encode($this->uploader->extraData);
+            $result['id'] = $this->driverInstance->id;
+            $result['chunk'] = $this->driverInstance->chunk;
+            $result['chunks'] = $this->driverInstance->chunks;
+            $result['extraData'] = json_encode($this->driverInstance->extraData);
         } else {
             $result['error'] = [
                 'code'=> '400',

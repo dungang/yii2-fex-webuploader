@@ -23,7 +23,7 @@ class Module extends \yii\base\Module
     /**
      * @var string|array 上传文件的驱动
      */
-    public $driver = 'dungang\webuploader\components\LocalUploader';
+    public $driver = 'dungang\storage\driver\Local';
 
     /**
      * @var string 上传文件保存的相对路径

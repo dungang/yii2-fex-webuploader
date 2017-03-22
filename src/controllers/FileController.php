@@ -42,13 +42,13 @@ class FileController extends Controller
         return [
             'upload'=>[
                 'class'=>'dungang\webuploader\actions\UploadAction',
-                'uploaderDriver'=>$module->driver,
+                'driver'=>$module->driver,
                 'saveDir' => $module->saveDir,
                 'accept' => $module->accept
             ],
             'delete' => [
                 'class' => 'dungang\webuploader\actions\DelAction',
-                'uploaderDriver'=>$module->driver,
+                'driver'=>$module->driver,
                 'saveDir' => $module->saveDir,
             ]
         ];

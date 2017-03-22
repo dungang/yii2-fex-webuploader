@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Lenovo
- * Date: 2017/3/3
+ * User: dungang
+ * Date: 2017/3/22
  * Time: 18:26
  */
 
@@ -20,22 +20,20 @@ trait ActionTrait
     /**
      * @var string|array
      */
-    public $uploaderDriver;
+    public $driver;
 
     /**
-     * @var \dungang\webuploader\components\Uploader
+     * @var \dungang\storage\Driver
      */
-    protected $uploader;
+    protected $driverInstance;
 
     /**
      * @param $post array
      */
     public function instanceDriver($post)
     {
-        $props = get_class_vars('dungang\webuploader\components\Uploader');
-
+        $props = get_class_vars('\dungang\storage\Driver');
         $post['saveDir'] = $this->saveDir;
-
         $config = [];
         foreach($props as $prop=>$def) {
            if (isset($post[$prop])) {
@@ -44,12 +42,12 @@ trait ActionTrait
                $config[$prop] = $def;
            }
         }
-        if (is_array($this->uploaderDriver)){
-            $this->uploaderDriver = array_merge($this->uploaderDriver,$config);
-            $this->uploader = \Yii::createObject($this->uploaderDriver);
+        if (is_array($this->driver)){
+            $this->driver = array_merge($this->driver,$config);
+            $this->driverInstance = \Yii::createObject($this->driver);
         } else {
-            $config['class']=$this->uploaderDriver;
-            $this->uploader = \Yii::createObject($config);
+            $config['class']=$this->driver;
+            $this->driverInstance = \Yii::createObject($config);
         }
     }
 }

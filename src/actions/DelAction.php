@@ -8,10 +8,10 @@
 
 namespace dungang\webuploader\actions;
 
-use dungang\webuploader\components\Uploader;
-use dungang\webuploader\components\UploaderEvent;
 use yii\base\Action;
 use yii\helpers\Json;
+use dungang\storage\Driver;
+use dungang\storage\StorageEvent;
 
 class DelAction extends Action
 {
@@ -28,12 +28,12 @@ class DelAction extends Action
             if(isset($post['fileObj'])) {
                 $delObj = $post['fileObj'];
                 unset($post['fileObj']);
-                $event = new UploaderEvent();
-                $this->controller->module->trigger(Uploader::EVENT_BEFORE_DELETE_FILE, $event);
-                if ($this->uploader->deleteFile($delObj)) {
+                $event = new StorageEvent();
+                $this->controller->module->trigger(Driver::EVENT_BEFORE_DELETE_FILE, $event);
+                if ($this->driverInstance->deleteFile($delObj)) {
                     $result['result'] = $delObj;
                     $event->file = $delObj;
-                    $this->controller->module->trigger(Uploader::EVENT_AFTER_DELETE_FILE,$event);
+                    $this->controller->module->trigger(Driver::EVENT_AFTER_DELETE_FILE,$event);
                 } else {
                     $result['error'] = [
                         'code'=> '110',
@@ -41,7 +41,7 @@ class DelAction extends Action
                     ];
                 }
             }
-            $result['id'] = $this->uploader->id;
+            $result['id'] = $this->driverInstance->id;
         } else {
             $result['error'] = [
                 'code'=> '400',
