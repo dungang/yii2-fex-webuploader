@@ -5,9 +5,9 @@
 * 默认只能上传一个文件 文件的服务端存储位置保存在隐藏字段 
 * 要上传多个文件，可以通过 clientOptions配置。开启之后，多个文件的服务端存储位置用`,`分隔成一个字符串保存在隐藏字段
 * 本模块的UI不具备通用性，只是解决了上传普通文件，上传大文件的问题
-* 目前不支持事件callback
 * 主要是解决自己项目的业务场景
-* 支持上传文件驱动扩展，本模块默认实现的本地文件上传的驱动
+* 放弃之前的文件处理驱动，使用 [dungang/yii2-file-storage](https://github.com/dungang/yii2-file-storage) 作为文件存储方案的替换
+
 
 ![效果图](example.png)
 
@@ -37,9 +37,9 @@ composer require dungang/yii2-fex-webuploader
         /**
          * @var string 上传文件的驱动
          */
-//        'driver' => 'dungang\webuploader\components\LocalUploader',
+//        'driver' => 'dungang\storage\driver\Local',
 //        'driver' => [
-                'class'=>'dungang\webuploader\components\AliYunOSSUploader',
+                'class'=>'dungang\storage\driver\AliYunOSS',
                 //Yii::$app->params['oss']
                 'paramKey'=>'oss'
             ],
@@ -132,83 +132,9 @@ composer require dungang/yii2-fex-webuploader
 
 ## 扩展驱动
 
-可以扩展oss，qiniu等等，本地扩展驱动试例如下
+放弃之前的文件处理驱动，使用 [dungang/yii2-file-storage](https://github.com/dungang/yii2-file-storage) 作为文件存储方案的替换
 
-```
-/**
- * Created by PhpStorm.
- * User: dungang
- * Date: 2017/3/2
- * Time: 11:24
- */
 
-namespace dungang\webuploader\components;
-
-use yii\helpers\BaseFileHelper;
-
-class LocalUploader extends Uploader
-{
-    /**
-     * @return bool|string
-     */
-    public function writeFile()
-    {
-        $fileName = md5($this->guid . $this->id);
-
-        $file = $fileName . '.' . $this->file->extension;
-
-        $dir = $this->saveDir .DIRECTORY_SEPARATOR. date('Y-m-d');
-
-        $path =  \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $dir;
-
-        $position = 0;
-
-        if (BaseFileHelper::createDirectory($path))
-        {
-            $targetFile = $path . DIRECTORY_SEPARATOR . $file;
-            if($this->chunked) {
-                if ($this->chunk === 0 ) {
-                    $position = 0;
-                    if (file_exists($targetFile)) {
-                        @unlink($targetFile);
-                    }
-                } else {
-                    $position = $this->chunkSize * $this->chunk;
-                }
-            }
-            if($out = @fopen($targetFile,'a+b')){
-                fseek($out,$position);
-                if ( flock($out, LOCK_EX) ) {
-                    if ($in = fopen($this->file->tempName, 'rb')) {
-                        while ($buff = fread($in, 4096)) {
-                            fwrite($out, $buff);
-                        }
-                        @fclose($in);
-                        @unlink($this->file->tempName);
-                    }
-                    flock($out, LOCK_UN);
-                }
-                @fclose($out);
-                return BaseFileHelper::normalizePath( $dir . DIRECTORY_SEPARATOR . $file);
-            }
-
-        }
-        return false;
-    }
-
-    public function deleteFile($file)
-    {
-        $file = BaseFileHelper::normalizePath(ltrim($file,'/\\'));
-        $dir = BaseFileHelper::normalizePath(ltrim($this->saveDir,'/\\'));
-        $prefix = substr($file,0,strlen($dir));
-        if (strcasecmp($prefix,$dir)==0) {
-            $path = \Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $file;
-            return @unlink($path);
-        }
-        return false;
-    }
-}
-```
 
 > 支持事件
 

@@ -31,11 +31,11 @@ class DelAction extends Action
                 $delObj = $post['fileObj'];
                 unset($post['fileObj']);
                 $event = new StorageEvent();
-                $this->controller->module->trigger(Driver::EVENT_BEFORE_DELETE_FILE, $event);
+                $this->driverInstance->trigger(Driver::EVENT_BEFORE_DELETE_FILE, $event);
                 if ($this->driverInstance->deleteFile($delObj)) {
                     $result['result'] = $delObj;
                     $event->file = $delObj;
-                    $this->controller->module->trigger(Driver::EVENT_AFTER_DELETE_FILE,$event);
+                    $this->driverInstance->trigger(Driver::EVENT_AFTER_DELETE_FILE,$event);
                 } else {
                     $result['error'] = [
                         'code'=> '110',
