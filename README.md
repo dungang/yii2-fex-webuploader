@@ -70,6 +70,20 @@ composer require dungang/yii2-fex-webuploader
     'name' =>'image'
 ])?>
 
+<?= $form->field($model,'cover')->widget('dungang\webuploader\widgets\WebUploader',[
+    'chunked'=>true,
+    'chunkSize'=>4*1024*1024 //七牛存储必须设置为4m
+])?> 
+
+```
+
+> 修改 php.ini
+
+```
+## 七牛存储必须设置为4m 所以 至少是4m
+upload_max_filesize = 4M  
+post_max_size = 8M
+
 ```
 
 > 配置参数如下
