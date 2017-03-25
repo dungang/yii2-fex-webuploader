@@ -21,16 +21,6 @@ class Module extends \yii\base\Module
     public $controllerNamespace = 'dungang\webuploader\controllers';
 
     /**
-     * @var string|array 上传文件的驱动
-     */
-    public $driver = 'dungang\storage\driver\Local';
-
-    /**
-     * @var string 上传文件保存的相对路径
-     */
-    public $saveDir = 'upload/webuploader';
-
-    /**
      * @var array 接受的文件类型
      */
     public $accept = ['gif','jpg','png','bmp','docx','doc','ppt','xsl','rar','zip','7z'];

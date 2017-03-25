@@ -46,6 +46,7 @@
                         case 'queued':
                             uploader.removeFile(file,true);
                             _files[file.id] = null;
+                            _li.remove();
                             break;
                         case 'error':
                         case 'invalid':
@@ -55,6 +56,7 @@
                             uploader.removeFile(file,true);
                             _files[file.id] = null;
                             _hidden.trigger('update');
+                            _li.remove();
                             break;
                         case 'complete':
                             if(confirm("Are you sure ?\n确定删除吗？")) {
@@ -66,11 +68,11 @@
                                     });
                                     _files[file.id] = null;
                                     _hidden.trigger('update');
+                                    _li.remove();
                                 }
                             }
                             break;
                     }
-                    _li.remove();
                 });
                 // list为容器jQuery实例
                 _list.append(_li);

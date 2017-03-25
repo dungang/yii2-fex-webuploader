@@ -11,31 +11,20 @@ namespace dungang\webuploader\actions;
 use yii\base\Action;
 use yii\helpers\Json;
 use dungang\storage\Driver;
-use dungang\storage\StorageEvent;
 
 class DelAction extends Action
 {
-
-    use ActionTrait;
-
     public function run(){
         $result = [
             'jsonrpc'=>'2.0',
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
-
-            $this->instanceDriver($post);
-
             if(isset($post['fileObj'])) {
                 $delObj = $post['fileObj'];
                 unset($post['fileObj']);
-                $event = new StorageEvent();
-                $this->driverInstance->trigger(Driver::EVENT_BEFORE_DELETE_FILE, $event);
-                if ($this->driverInstance->deleteFile($delObj)) {
+                if (Driver::deleteObject($delObj)) {
                     $result['result'] = $delObj;
-                    $event->file = $delObj;
-                    $this->driverInstance->trigger(Driver::EVENT_AFTER_DELETE_FILE,$event);
                 } else {
                     $result['error'] = [
                         'code'=> '110',
@@ -43,7 +32,7 @@ class DelAction extends Action
                     ];
                 }
             }
-            $result['id'] = $this->driverInstance->id;
+            $result['id'] = $post['id'];
         } else {
             $result['error'] = [
                 'code'=> '400',

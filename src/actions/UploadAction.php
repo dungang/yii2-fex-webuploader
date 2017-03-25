@@ -11,52 +11,29 @@ namespace dungang\webuploader\actions;
 
 use yii\base\Action;
 use yii\helpers\Json;
-use dungang\storage\Driver;
-use dungang\storage\StorageEvent;
+use dungang\storage\ActionTrait;
 
 class UploadAction extends Action
 {
 
     use ActionTrait;
 
-    public $accept;
-
     public function run()
     {
+
         $result = [
             'jsonrpc'=>'2.0',
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
             $this->instanceDriver($post);
-            $this->driverInstance->initFile();
-            $file = $this->driverInstance->file;
-            if ($file->error === 0) {
-                if ($this->checkExtension($file)) {
-                    $event = new StorageEvent();
-                    $this->driverInstance->trigger(Driver::EVENT_BEFORE_WRITE_FILE,$event);
-                    $rst = $this->driverInstance->writeFile();
-                    if ($rst['code']==0){
-                        $result['result'] = $rst['object'];
-                        $event->file = $rst['object'];
-                        $this->driverInstance->trigger(Driver::EVENT_AFTER_WRITE_FILE,$event);
-                    } else {
-                        $result['error'] = [
-                            'code'=> '100',
-                            'message' => $rst['message'],
-                        ];
-                    }
-                } else {
-                    $result['error'] = [
-                        'code'=> '401',
-                        'message' => '不允许上传'.$file->extension.'格式的文件',
-                    ];
-                }
-
+            $rst = $this->driverInstance->save();
+            if ($rst['code'] == 0) {
+                $result['result'] = $rst['object']->url;
             } else {
                 $result['error'] = [
-                    'code'=> 100 + $file->error,
-                    'message' => $this->driverInstance->message($file->error),
+                    'code'=> $rst['code'],
+                    'message' => $rst['message'],
                 ];
             }
             $result['id'] = $this->driverInstance->id;
@@ -70,24 +47,9 @@ class UploadAction extends Action
             ];
         }
         if (isset($result['error'])) {
-            \Yii::$app->response->setStatusCode(500);
+            \Yii::$app->response->setStatusCode(500,$result['error']['message']);
         }
         return Json::encode($result);
     }
 
-    /**
-     * @param $file \yii\web\UploadedFile
-     * @return bool
-     */
-    protected function checkExtension($file) {
-        //如果是数组，则必须按照列表检查
-        if (is_array($this->accept)) {
-            if (in_array($file->extension,$this->accept)) {
-                return true;
-            }
-            return false;
-        }
-        //如果不是数组，则不检查文件后缀
-        return true;
-    }
 }
