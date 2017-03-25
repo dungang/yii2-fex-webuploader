@@ -75,6 +75,15 @@ composer require dungang/yii2-fex-webuploader
     'chunkSize'=>4*1024*1024 //七牛存储必须设置为4m
 ])?> 
 
+<?= $form->field($model, 'cover')->widget('dungang\webuploader\widgets\WebUploader',[
+    'chunked'=>true,
+    'chunkSize'=>4*1024*1024,
+    'formData'=>[
+        'entityId'=>$model->id,
+        'entityName'=>'post'
+    ]
+]) ?>
+
 ```
 
 > 修改 php.ini
