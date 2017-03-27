@@ -14,7 +14,7 @@
             var fileUploadedParts={};
             //每个文件上传到服务端返回的文件名称
             var _files = {};
-            opts.options.formData.guid = WebUploader.guid();
+            //opts.options.formData.guid = WebUploader.guid();
             opts.options.formData.extraData = '{}';
             var uploader = WebUploader.create(opts.options);
             var _hidden = _this.find('input[type=hidden]');
