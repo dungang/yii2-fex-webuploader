@@ -2,7 +2,6 @@
   "name": "dungang/yii2-fex-webuploader",
   "description": "A  webuploader for Yii2",
   "license": "MIT",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "dun gang",
