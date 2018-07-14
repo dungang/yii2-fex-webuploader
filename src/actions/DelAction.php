@@ -11,8 +11,9 @@ namespace dungang\webuploader\actions;
 use yii\base\Action;
 use yii\helpers\Json;
 use dungang\storage\Driver;
+use dungang\storage\StorageAction;
 
-class DelAction extends Action
+class DelAction extends StorageAction
 {
     public function run(){
         $result = [
@@ -23,7 +24,7 @@ class DelAction extends Action
             if(isset($post['fileObj'])) {
                 $delObj = $post['fileObj'];
                 unset($post['fileObj']);
-                if (Driver::deleteObject($delObj)) {
+                if ($this->driver->deleteUpload($delObj)) {
                     $result['result'] = $delObj;
                 } else {
                     $result['error'] = [

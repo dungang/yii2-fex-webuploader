@@ -11,12 +11,10 @@ namespace dungang\webuploader\actions;
 
 use yii\base\Action;
 use yii\helpers\Json;
-use dungang\storage\ActionTrait;
+use dungang\storage\StorageAction;
 
-class UploadAction extends Action
+class UploadAction extends StorageAction
 {
-
-    use ActionTrait;
 
     public function run()
     {
@@ -26,20 +24,20 @@ class UploadAction extends Action
         ];
         if ($post = \Yii::$app->request->post()) {
             unset($post[\Yii::$app->request->csrfParam]);
-            $this->instanceDriver($post);
-            $rst = $this->driverInstance->save();
-            if ($rst['code'] == 0) {
-                $result['result'] = $rst['object']->url;
+            $rst = $this->driver->chunkUpload();
+            if ($rst->isOk) {
+                $result['result'] = $rst->url;
             } else {
                 $result['error'] = [
-                    'code'=> $rst['code'],
-                    'message' => $rst['message'],
+                    'code'=> 500,
+                    'message' => $rst->error,
                 ];
             }
-            $result['id'] = $this->driverInstance->id;
-            $result['chunk'] = $this->driverInstance->chunk;
-            $result['chunks'] = $this->driverInstance->chunks;
-            $result['extraData'] = json_encode($this->driverInstance->extraData);
+            $result['uploadId'] = $rst->uploadId;
+            $result['key'] = $rst->key;
+            $result['chunk'] = $rst->chunk;
+            $result['chunks'] = $rst->chunks;
+            $result['extraData'] = json_encode($rst->extraData);
         } else {
             $result['error'] = [
                 'code'=> '400',
