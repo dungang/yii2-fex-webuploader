@@ -15,10 +15,13 @@ use dungang\storage\StorageAction;
 
 class UploadAction extends StorageAction
 {
+    
+    public $accept;
 
     public function run()
     {
 
+        $this->driver->accept = $this->accept;
         $result = [
             'jsonrpc'=>'2.0',
         ];
@@ -35,8 +38,6 @@ class UploadAction extends StorageAction
             }
             $result['uploadId'] = $rst->uploadId;
             $result['key'] = $rst->key;
-            $result['chunk'] = $rst->chunk;
-            $result['chunks'] = $rst->chunks;
             $result['extraData'] = json_encode($rst->extraData);
         } else {
             $result['error'] = [
